@@ -25,6 +25,11 @@ path = 'contracts/privacy.clar'
 clarity_version = 2
 epoch = 2.5
 
+[contracts.tokenized_data_transaction]
+path = 'contracts/tokenized_data_transaction.clar'
+clarity_version = 2
+epoch = 2.5
+
 [contracts.user_data_control]
 path = 'contracts/user_data_control.clar'
 clarity_version = 2
