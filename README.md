@@ -1,72 +1,60 @@
-# Reputation Token (RT) Smart Contract
+# User Identity Smart Contract
 
 ## Overview
-The **Reputation Token (RT)** is a **non-transferable, reputation-based fungible token** designed to reward users based on their **job performance, value, difficulty, and client ratings**. It follows the **SIP-010 fungible token standard** while restricting direct transfers to maintain its integrity as a reputation-based metric.
+The `user_identity` smart contract is designed for managing user authentication and identity verification in a decentralized system. It provides role-based access control, verification requests, and metadata updates for registered users.
 
 ## Features
-- **Minting:** Users earn RT tokens based on job completion, job value, difficulty, and client ratings.
-- **Burning:** RT tokens can be burned as penalties for poor performance.
-- **Freezing:** Tokens can be temporarily frozen to restrict usage.
-- **Non-Transferable:** Users cannot transfer RT tokens freely; they are managed by the contract owner.
-- **Job History Tracking:** Maintains a history of completed jobs, total job value, and average client rating.
+- **User Registration**: Users can register with a unique decentralized identity (DID) and role.
+- **Role-Based Access Control**: Defines multiple roles such as Patient, Doctor, Researcher, and Admin.
+- **Identity Verification**: Allows administrators to verify users.
+- **Permission Management**: Controls user capabilities based on their roles.
+- **Metadata Updates**: Users can update their identity metadata.
+- **Verification Requests**: Users can request verification and track status.
+- **Read-Only Access**: Allows retrieval of user identities, verification status, and role permissions.
+
+## Roles
+- **Patient (`ROLE-PATIENT`)**: Basic user with limited permissions.
+- **Doctor (`ROLE-DOCTOR`)**: Can access anonymized data.
+- **Researcher (`ROLE-RESEARCHER`)**: Similar permissions to doctors.
+- **Admin (`ROLE-ADMIN`)**: Full control, can verify identities and update permissions.
+
+## Constants
+- `err-owner-only (u100)`: Only the contract owner can perform the action.
+- `err-unauthorized (u101)`: Unauthorized access.
+- `err-already-registered (u102)`: User already registered.
+- `err-not-found (u103)`: User not found.
+- `err-invalid-role (u104)`: Invalid role selection.
+
+## Data Structures
+- `user-identities`: Stores user details including DID, role, verification status, and metadata.
+- `role-permissions`: Maps roles to their respective permissions.
+- `verification-requests`: Stores pending verification requests.
 
 ## Functions
+### Public Functions
+- `register-identity(did, role, metadata)`: Registers a new user identity.
+- `submit-verification-request(proof-document)`: Submits a verification request.
+- `verify-identity(user)`: Admin function to verify a user.
+- `update-metadata(new-metadata)`: Updates user metadata.
 
-### SIP-010 Standard Functions
-- `get-name` → Returns the token name (**Reputation Token**).
-- `get-symbol` → Returns the token symbol (**RT**).
-- `get-decimals` → Returns the token decimal precision (**6 decimals**).
-- `get-balance(account)` → Returns the balance of RT tokens for a given user.
-- `get-total-supply` → Returns the total supply of RT tokens.
-- `get-token-uri` → Returns **none** (no token metadata provided).
-
-### Reputation-Specific Functions
-#### **Minting Reputation Tokens**
-- `mint-reputation-tokens(recipient, job-value, job-difficulty, client-rating)`
-  - **Requires contract owner authorization.**
-  - Calculates tokens to mint based on:
-    - Job value
-    - Job difficulty
-    - Client rating
-  - Updates user’s job history.
-  - Mints and assigns RT tokens to the recipient.
-
-#### **Burning Reputation Tokens**
-- `burn-reputation-tokens(user, amount)`
-  - **Requires contract owner authorization.**
-  - Reduces the reputation tokens of a user as a penalty.
-
-#### **Freezing Reputation Tokens**
-- `freeze-reputation-tokens(user, amount)`
-  - **Requires contract owner authorization.**
-  - Transfers a specified amount of RT tokens to the contract owner, effectively freezing them.
-
-#### **Preventing Unauthorized Transfers**
-- `transfer(amount, sender, recipient, memo)`
-  - **Always fails with an error (`err-transfer-not-allowed`).**
-  - Prevents direct transfer of RT tokens to ensure reputation integrity.
-
-#### **Retrieving User Job History**
-- `get-user-job-history(user)`
-  - Returns a user’s job history including:
-    - **Completed jobs**
-    - **Total value of jobs**
-    - **Average rating from clients**
+### Read-Only Functions
+- `has-permission(user, permission-key)`: Checks if a user has a specific permission.
+- `get-identity(user)`: Retrieves user identity details.
+- `get-verification-request(user)`: Retrieves the verification request status.
+- `is-verified(user)`: Checks if a user is verified.
+- `get-role-permissions(role)`: Retrieves permissions associated with a role.
 
 ## Security & Access Control
-- Only the **contract owner** can mint, burn, or freeze reputation tokens.
-- RT tokens **cannot be transferred** between users.
-- Reputation data is **stored on-chain**, ensuring transparency and security.
+- Only registered users can update metadata or submit verification requests.
+- Only admins can verify identities.
+- Role-based permissions ensure proper access control.
 
-## Usage Scenarios
-- **Freelance Platforms:** Rewarding workers based on job difficulty, value, and client satisfaction.
-- **Reputation Systems:** Maintaining a trust-based economy where users earn credibility over time.
-- **Decentralized Work Networks:** Preventing fake reputations by ensuring tokens are only issued for real work.
+## Usage
+1. **Register a user**: Call `register-identity` with DID, role, and metadata.
+2. **Request verification**: Call `submit-verification-request` with a proof document.
+3. **Admin verifies identity**: Call `verify-identity` to approve verification.
+4. **Check verification status**: Use `is-verified` or `get-verification-request`.
 
-## Future Enhancements
-- Implement **automated penalties** for fraud detection.
-- Introduce **tiered reputation rewards** for consistent high performers.
-- Enable **on-chain dispute resolution mechanisms** for rating adjustments.
+## License
+This smart contract is open-source and free to use under the MIT License.
 
----
-This contract ensures that **Reputation Tokens are a true measure of a user’s credibility** by linking them to real work and client feedback while preventing manipulation through transfers. 🚀
