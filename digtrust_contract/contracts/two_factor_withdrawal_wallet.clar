@@ -202,3 +202,9 @@
         
         (ok true)))
 
+;; Initialize contract
+(begin
+    (var-set wallet-balance u0)
+    (var-set withdrawal-counter u0)
+    ;; Add contract owner as initial validator
+    (map-set authorized-validators contract-owner true))
