@@ -55,6 +55,11 @@ path = 'contracts/tokenized_data_transaction.clar'
 clarity_version = 2
 epoch = 2.5
 
+[contracts.two_factor_withdrawal_wallet]
+path = 'contracts/two_factor_withdrawal_wallet.clar'
+clarity_version = 2
+epoch = 2.5
+
 [contracts.user_data_control]
 path = 'contracts/user_data_control.clar'
 clarity_version = 2
